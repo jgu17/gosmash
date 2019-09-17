@@ -5,6 +5,7 @@ import (
     "fmt"
     "golang.org/x/crypto/ssh"
     "gosmash/client"
+    "gosmash/commands"
 )
 
 //An example CLI program demonstrating the usage of GoSMASH client.
@@ -45,6 +46,9 @@ func main() {
         err error
     )
 
+    media := commands.VirtualMedia(c)
+    power = commands.Power(c)
+
     switch cmd := args[0]; cmd {
     case "insert_cdrom":
         if len(args) < 2 {
@@ -53,12 +57,12 @@ func main() {
         }
         url := args[1]
         if *boot == "once" {
-            res, err = c.InsertCDRomImageSingleBoot(url)
+            res, err = media.InsertCDRomImageSingleBoot(url)
         } else {             
-            res, err = c.InsertCDRomImage(url)
+            res, err = media.InsertCDRomImage(url)
         }
     case "eject_cdrom":
-        res, err = c.EjectCDRomImage()
+        res, err = media.EjectCDRomImage()
     case "insert_usb":
         if len(args) < 2 {
             fmt.Println("Usage: -b=[once|always] insert_usb ISO_url")
@@ -66,20 +70,20 @@ func main() {
         }
         url := args[2]
         if *boot == "once" {
-            res, err = c.InsertUSBImageSingleBoot(url)
+            res, err = media.InsertUSBImageSingleBoot(url)
         } else {
-            res, err = c.InsertUSBImage(url)
+            res, err = media.InsertUSBImage(url)
         }
     case "eject_usb":
-        res, err = c.EjectUSBImage()
+        res, err = media.EjectUSBImage()
     case "start":
-        res, err = c.StartServer()
+        res, err = power.StartServer()
     case "stop":
-        res, err = c.StopServer()
+        res, err = power.StopServer()
     case "reset_hard":
-        res, err = c.ResetServerHard()
+        res, err = power.ResetServerHard()
     case "reset_soft":
-        res, err = c.ResetServerSoft()
+        res, err = power.ResetServerSoft()
     default:
         fmt.Println("Unrecognized command:", cmd)
         return
