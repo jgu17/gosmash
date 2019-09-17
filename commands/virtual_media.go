@@ -1,8 +1,12 @@
 package commands
 
+import (
+    "gosmash/client"
+)
+
 // Smash CLP virtual media commands
 type VirtualMedia struct {
-    Client *gosmash.Client
+    Client client.Client
 }
 
 const (
@@ -16,58 +20,58 @@ const (
     BootAlwaysOption = "always"
 )
 
-func (c *smashClient) InsertUSBImage(url string) (string, error) {
+func (v *VirtualMedia) InsertUSBImage(url string) (string, error) {
    cmds := []string {
              SetUSBTargetCmd,
              SetOEMHPImageCmd + url,
              SetOEMHPConnectCmd,
    }
-   return c.Commands(cmds)
+   return v.Client.Commands(cmds)
 }
 
 
-func (c *smashClient) InsertUSBImageSingleBoot(url string) (string, error) {
+func (v *VirtualMedia) InsertUSBImageSingleBoot(url string) (string, error) {
    cmds := []string {
              SetUSBTargetCmd,
              SetOEMHPImageCmd + url,
              SetOEMHPConnectCmd,
              SetOEMHPBootCmd + BootOnceOption,
    }
-   return c.Commands(cmds)
+   return v.Client.Commands(cmds)
 }
 
-func (c *smashClient) EjectUSBImage() (string, error) {
+func (v *VirtualMedia) EjectUSBImage() (string, error) {
    cmds := []string {
              SetUSBTargetCmd,
              SetOEMHPDisconnectCmd,
    }
-   return c.Commands(cmds)
+   return v.Client.Commands(cmds)
 }
 
-func (c *smashClient) InsertCDRomImage(url string) (string, error) {
+func (v *VirtualMedia) InsertCDRomImage(url string) (string, error) {
    cmds := []string {
              SetCDROMTargetCmd,
              SetOEMHPImageCmd + url,
              SetOEMHPConnectCmd,
    }
-   return c.Commands(cmds)
+   return v.Client.Commands(cmds)
 }
 
 
-func (c *smashClient) InsertCDRomImageSingleBoot(url string) (string, error) {
+func (v *VirtualMedia) InsertCDRomImageSingleBoot(url string) (string, error) {
    cmds := []string {
              SetCDROMTargetCmd,
              SetOEMHPImageCmd + url,
              SetOEMHPConnectCmd,
              SetOEMHPBootCmd + BootOnceOption,
    }
-   return c.Commands(cmds)
+   return v.Client.Commands(cmds)
 }
 
-func (c *smashClient) EjectCDRomImage() (string, error) {
+func (v *VirtualMedia) EjectCDRomImage() (string, error) {
    cmds := []string {
              SetCDROMTargetCmd,
              SetOEMHPDisconnectCmd,
    }
-   return c.Commands(cmds)
+   return v.Client.Commands(cmds)
 }

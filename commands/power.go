@@ -1,8 +1,12 @@
 package commands
 
+import (
+    "gosmash/client"
+)
+
 //SMASH CLP power commands
 type Power struct {
-    Client *gosmash.Client
+    Client client.Client
 }
 
 const (
@@ -13,35 +17,35 @@ const (
     ResetSoftCmd = "reset soft"
 )
 
-func (c *smashClient) StartServer() (string, error) {
+func (p *Power) StartServer() (string, error) {
    cmds := []string {
              SetSystemTargetCmd,
              StartCmd,
    }
-   return c.Commands(cmds)
+   return p.Client.Commands(cmds)
 }
 
-func (c *smashClient) StopServer() (string, error) {
+func (p *Power) StopServer() (string, error) {
    cmds := []string {
              SetSystemTargetCmd,
              StopCmd,
    }
-   return c.Commands(cmds)
+   return p.Client.Commands(cmds)
 }
 
-func (c *smashClient) ResetServerHard() (string, error) {
+func (p *Power) ResetServerHard() (string, error) {
    cmds := []string {
              SetSystemTargetCmd,
              ResetHardCmd,
    }
-   return c.Commands(cmds)
+   return p.Client.Commands(cmds)
 }
 
 
-func (c *smashClient) ResetServerSoft() (string, error) {
+func (p *Power) ResetServerSoft() (string, error) {
    cmds := []string {
              SetSystemTargetCmd,
              ResetSoftCmd,
    }
-   return c.Commands(cmds)
+   return p.Client.Commands(cmds)
 }

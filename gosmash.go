@@ -46,8 +46,8 @@ func main() {
         err error
     )
 
-    media := commands.VirtualMedia(c)
-    power = commands.Power(c)
+    media := commands.VirtualMedia{c}
+    power := commands.Power{c}
 
     switch cmd := args[0]; cmd {
     case "insert_cdrom":
