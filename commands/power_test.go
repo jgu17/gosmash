@@ -1,16 +1,20 @@
 package commands
 
 import (
+    "strings"
     "testing"
     "gosmash/client"
+    "gosmash/commands"
 )
 
+var host = "localhost"
+var ep = *client.NewEndpoint(&host)
 
 func TestStartServerWhenPowerOff(t *testing.T) {
-    c := client.NewSimulator(client.NewEndpoint("localhost"))
+    c := client.NewSimulator(ep)
     c.PowerOn = false
     power := commands.Power{c}
-    res, err = power.StartServer()
+    res, err := power.StartServer()
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
@@ -23,10 +27,10 @@ func TestStartServerWhenPowerOff(t *testing.T) {
 }
 
 func TestStartServerWhenPowerOn(t *testing.T) {
-    c := client.NewSimulator(client.NewEndpoint("localhost"))
+    c := client.NewSimulator(ep)
     c.PowerOn = true
     power := commands.Power{c}
-    res, err = power.StartServer()
+    res, err := power.StartServer()
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
@@ -39,10 +43,10 @@ func TestStartServerWhenPowerOn(t *testing.T) {
 }
 
 func TestStopServerWhenPowerOn(t *testing.T) {
-    c := client.NewSimulator(client.NewEndpoint("localhost"))
+    c := client.NewSimulator(ep)
     c.PowerOn = true
     power := commands.Power{c}
-    res, err = power.StopServer()
+    res, err := power.StopServer()
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
@@ -55,10 +59,10 @@ func TestStopServerWhenPowerOn(t *testing.T) {
 }
 
 func TestStopServerWhenPowerOff(t *testing.T) {
-    c := client.NewSimulator(client.NewEndpoint("localhost"))
+    c := client.NewSimulator(ep)
     c.PowerOn = false
     power := commands.Power{c}
-    res, err = power.StopServer()
+    res, err := power.StopServer()
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
@@ -71,10 +75,10 @@ func TestStopServerWhenPowerOff(t *testing.T) {
 }
 
 func TestResetServerHardWhenPowerOn(t *testing.T) {
-    c := client.NewSimulator(client.NewEndpoint("localhost"))
+    c := client.NewSimulator(ep)
     c.PowerOn = true
     power := commands.Power{c}
-    res, err = power.ResetServerHard()
+    res, err := power.ResetServerHard()
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
@@ -87,10 +91,10 @@ func TestResetServerHardWhenPowerOn(t *testing.T) {
 }
 
 func TestResetServerHardWhenPowerOff(t *testing.T) {
-    c := client.NewSimulator(client.NewEndpoint("localhost"))
-    c.PowerOn = off
+    c := client.NewSimulator(ep)
+    c.PowerOn = false
     power := commands.Power{c}
-    res, err = power.ResetServerHard()
+    res, err := power.ResetServerHard()
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
@@ -103,10 +107,10 @@ func TestResetServerHardWhenPowerOff(t *testing.T) {
 }
 
 func TestResetServerSoftWhenPowerOn(t *testing.T) {
-    c := client.NewSimulator(client.NewEndpoint("localhost"))
+    c := client.NewSimulator(ep)
     c.PowerOn = true
     power := commands.Power{c}
-    res, err = power.ResetServerSoft()
+    res, err := power.ResetServerSoft()
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
@@ -119,10 +123,10 @@ func TestResetServerSoftWhenPowerOn(t *testing.T) {
 }
 
 func TestResetServerSoftWhenPowerOff(t *testing.T) {
-    c := client.NewSimulator(client.NewEndpoint("localhost"))
-    c.PowerOn = off
+    c := client.NewSimulator(ep)
+    c.PowerOn = false
     power := commands.Power{c}
-    res, err = power.ResetServerSoft()
+    res, err := power.ResetServerSoft()
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
