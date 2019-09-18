@@ -50,21 +50,24 @@ func PasswordAuth(pass *string) ssh.AuthMethod {
 
 
 // Executes a command to SMASH service
-func (c *smashClient) Command(cmd string) (string, error) {
+func (c *smashClient) Command(cmd Request) (string, error) {
     s, err := c.SSHClient.NewSession()
     defer s.Close()
 
     if err != nil {
         return "", err
     }
-
-    output, e := s.CombinedOutput(cmd)
+    req := cmd.Command
+    if (cmd.Args != nil && len(cmd.Args) > 0) {
+        req = req + strings.Join(cmd.Args, " ")
+    }
+    output, e := s.CombinedOutput(req)
     return string(output), e
 }
 
 // Executes an ordered list of commands to SMASH service. Stop at the first
 // execution error.
-func (c *smashClient) Commands(cmds []string) (string, error) {
+func (c *smashClient) Commands(cmds []Request) (string, error) {
     var output []string
     for _, cmd := range cmds {     
         s, err := c.Command(cmd)

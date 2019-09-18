@@ -1,6 +1,7 @@
 package commands
 
 import (
+    "fmt"
     "gosmash/client"
 )
 
@@ -9,21 +10,38 @@ type VirtualMedia struct {
     Client client.Client
 }
 
-const (
-    SetUSBTargetCmd = "cd /map1/oemhp_vm1/floppydr1"
-    SetCDROMTargetCmd = "cd /map1/oemhp_vm1/cddr1"
-    SetOEMHPImageCmd = "set oemhp_image="
-    SetOEMHPConnectCmd = "set oemhp_boot=connect"
-    SetOEMHPDisconnectCmd = "set oemhp_boot=disconnect"
-    SetOEMHPBootCmd = "set oemhp_boot="
-    BootOnceOption = "once"
-    BootAlwaysOption = "always"
-)
+var SetUSBTargetCmd = client.Request{
+    Command: "cd",
+    Args: []string{"/map1/oemhp_vm1/floppydr1"},
+}
+var SetCDROMTargetCmd = client.Request{
+    Command: "cd",
+    Args: []string{"/map1/oemhp_vm1/cddr1"},
+}
+var SetOEMHPImageCmd = client.Request{
+    Command: "set",
+    Args: []string{"oemhp_image="},
+}
+var SetOEMHPConnectCmd = client.Request{
+    Command: "set",
+    Args: []string{"oemhp_boot=connect"},
+}
+var SetOEMHPDisconnectCmd = client.Request{
+    Command: "set",
+    Args: []string{"oemhp_boot=disconnect"},
+}
+var SetOEMHPBootCmd = client.Request{
+    Command: "set", 
+    Args: []string{"oemhp_boot="},
+}
 
 func (v *VirtualMedia) InsertUSBImage(url string) (string, error) {
-   cmds := []string {
+   cmds := []client.Request {
              SetUSBTargetCmd,
-             SetOEMHPImageCmd + url,
+             client.Request {
+                 Command: "set",
+                 Args: []string{ "oemhp_image=" + url },
+             },
              SetOEMHPConnectCmd,
    }
    return v.Client.Commands(cmds)
@@ -31,17 +49,23 @@ func (v *VirtualMedia) InsertUSBImage(url string) (string, error) {
 
 
 func (v *VirtualMedia) InsertUSBImageSingleBoot(url string) (string, error) {
-   cmds := []string {
+   cmds := []client.Request {
              SetUSBTargetCmd,
-             SetOEMHPImageCmd + url,
+             client.Request{
+                 Command: "set",
+                 Args: []string{"oemhp_image=" + url},
+             },
              SetOEMHPConnectCmd,
-             SetOEMHPBootCmd + BootOnceOption,
+             client.Request{
+                 Command: "set",
+                 Args: []string{fmt.Sprintf("oemhp_boot=%s", client.BootOnce)},
+             },
    }
    return v.Client.Commands(cmds)
 }
 
 func (v *VirtualMedia) EjectUSBImage() (string, error) {
-   cmds := []string {
+   cmds := []client.Request {
              SetUSBTargetCmd,
              SetOEMHPDisconnectCmd,
    }
@@ -49,9 +73,12 @@ func (v *VirtualMedia) EjectUSBImage() (string, error) {
 }
 
 func (v *VirtualMedia) InsertCDRomImage(url string) (string, error) {
-   cmds := []string {
+   cmds := []client.Request {
              SetCDROMTargetCmd,
-             SetOEMHPImageCmd + url,
+             client.Request{
+                 Command: "set",
+                 Args: []string{"oemhp_image=" + url},
+             },
              SetOEMHPConnectCmd,
    }
    return v.Client.Commands(cmds)
@@ -59,17 +86,23 @@ func (v *VirtualMedia) InsertCDRomImage(url string) (string, error) {
 
 
 func (v *VirtualMedia) InsertCDRomImageSingleBoot(url string) (string, error) {
-   cmds := []string {
+   cmds := []client.Request {
              SetCDROMTargetCmd,
-             SetOEMHPImageCmd + url,
+             client.Request{
+                 Command: "set",
+                 Args: []string{"oemhp_image=" + url},
+             },
              SetOEMHPConnectCmd,
-             SetOEMHPBootCmd + BootOnceOption,
+             client.Request{
+                 Command: "set",
+                 Args: []string{fmt.Sprintf("oemhp_boot=%s", client.BootOnce)},
+             },
    }
    return v.Client.Commands(cmds)
 }
 
 func (v *VirtualMedia) EjectCDRomImage() (string, error) {
-   cmds := []string {
+   cmds := []client.Request {
              SetCDROMTargetCmd,
              SetOEMHPDisconnectCmd,
    }

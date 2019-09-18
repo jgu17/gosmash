@@ -1,6 +1,11 @@
 package client
 
 type Client interface {
-    Command(cmd string) (string, error)
-    Commands(cmds []string) (string, error)
+    Command(cmd Request) (string, error)
+    Commands(cmds []Request) (string, error)
+}
+
+type Request struct {
+    Command string
+    Args []string
 }

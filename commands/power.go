@@ -9,16 +9,16 @@ type Power struct {
     Client client.Client
 }
 
-const (
-    SetSystemTargetCmd = "cd /system1"
-    StartCmd = "start"
-    StopCmd = "stop"
-    ResetHardCmd = "reset hard"
-    ResetSoftCmd = "reset soft"
-)
+
+var SetSystemTargetCmd = client.Request{Command: "cd", Args: []string {"/system1"}}
+var StartCmd = client.Request{Command: "start"}
+var StopCmd = client.Request{Command: "stop"}
+var ResetHardCmd = client.Request{Command: "reset", Args: []string {"hard"}}
+var ResetSoftCmd = client.Request{Command: "reset", Args: []string {"soft"}}
+
 
 func (p *Power) StartServer() (string, error) {
-   cmds := []string {
+   cmds := []client.Request {
              SetSystemTargetCmd,
              StartCmd,
    }
@@ -26,7 +26,7 @@ func (p *Power) StartServer() (string, error) {
 }
 
 func (p *Power) StopServer() (string, error) {
-   cmds := []string {
+   cmds := []client.Request {
              SetSystemTargetCmd,
              StopCmd,
    }
@@ -34,7 +34,7 @@ func (p *Power) StopServer() (string, error) {
 }
 
 func (p *Power) ResetServerHard() (string, error) {
-   cmds := []string {
+   cmds := []client.Request {
              SetSystemTargetCmd,
              ResetHardCmd,
    }
@@ -43,7 +43,7 @@ func (p *Power) ResetServerHard() (string, error) {
 
 
 func (p *Power) ResetServerSoft() (string, error) {
-   cmds := []string {
+   cmds := []client.Request {
              SetSystemTargetCmd,
              ResetSoftCmd,
    }
