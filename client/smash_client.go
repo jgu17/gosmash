@@ -10,23 +10,12 @@ import (
 type smashClient struct {
 	// SSH Endpoint
 	Endpoint endpoint
-        SSHClient *ssh.Client
+        sshClient *ssh.Client
 }
 
-
 // creates a new client to a Smash service.
-func NewClient(e endpoint, auth ssh.AuthMethod) (client *smashClient, err error) {
-    client = &smashClient{Endpoint: e}
-    config := &ssh.ClientConfig {
-        User: e.User,
-        Auth: []ssh.AuthMethod {
-                auth,
-        },
-        HostKeyCallback: ssh.InsecureIgnoreHostKey(),
-    }
-
-    client.SSHClient, err = ssh.Dial("tcp", *e.HostString(), config)
-    return
+func NewClient(e endpoint) *smashClient {
+    return &smashClient{Endpoint: e}
 }
 
 
@@ -48,36 +37,49 @@ func PasswordAuth(pass *string) ssh.AuthMethod {
     return ssh.Password(*pass)
 }
 
+func (c *smashClient) Connect(auth ssh.AuthMethod) error {
+    config := &ssh.ClientConfig {
+        User: c.Endpoint.User,
+        Auth: []ssh.AuthMethod {
+                auth,
+        },
+        HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+    }
+    var err error
+    c.sshClient, err = ssh.Dial("tcp", *(c.Endpoint).HostString(), config)
+    return err
+}
 
 // Executes a command to SMASH service
-func (c *smashClient) Command(cmd Request) (string, error) {
-    s, err := c.SSHClient.NewSession()
+func (c *smashClient) Command(cmd Request) (*Response, error) {
+    s, err := c.sshClient.NewSession()
     defer s.Close()
 
     if err != nil {
-        return "", err
+        return new(Response), err
     }
     req := cmd.Command
     if (cmd.Args != nil && len(cmd.Args) > 0) {
-        req = req + strings.Join(cmd.Args, " ")
+        req = req + " " + strings.Join(cmd.Args, " ")
     }
     output, e := s.CombinedOutput(req)
-    return string(output), e
+    return NewResponse(string(output)), e
 }
 
 // Executes an ordered list of commands to SMASH service. Stop at the first
 // execution error.
-func (c *smashClient) Commands(cmds []Request) (string, error) {
-    var output []string
+func (c *smashClient) Commands(cmds []Request) ([]Response, error) {
+    var resList []Response
     for _, cmd := range cmds {     
-        s, err := c.Command(cmd)
-        if s != "" {
-            output = append(output, s)
-        }
+        r, err := c.Command(cmd)
         if err != nil {
-            return strings.Join(output, "\n*****\n"), err
+            return resList, err
+        }
+        resList = append(resList, *r)
+        if r.Status != 0 {
+            return resList, nil
         }
     }
 
-    return strings.Join(output, "\n*****\n"), nil
+    return resList, nil
 }

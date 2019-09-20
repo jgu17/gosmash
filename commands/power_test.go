@@ -1,7 +1,6 @@
 package commands
 
 import (
-    "strings"
     "testing"
     "gosmash/client"
     "gosmash/commands"
@@ -19,10 +18,10 @@ func TestStartServerWhenPowerOff(t *testing.T) {
         t.Errorf("Command execution error: %s", err)
     }
     if c.PowerOn != true {
-        t.Errorf("Server power is not on. \nReceived response: \n%s", res)
+        t.Errorf("Server power is not on. \nReceived response: \n%s", client.PrintResponse(res))
     }
-    if !strings.Contains(res, "status=0") {
-        t.Errorf("Unexpected non zero status code in output: %s", res)
+    if client.HasError(res) {
+        t.Errorf("Unexpected non zero status code in output: \n%s", client.PrintResponse(res))
     }
 }
 
@@ -35,10 +34,10 @@ func TestStartServerWhenPowerOn(t *testing.T) {
         t.Errorf("Command execution error: %s", err)
     }
     if c.PowerOn != true {
-        t.Errorf("Server power is not on. \nReceived response: \n%s", res)
+        t.Errorf("Server power is not on. \nReceived response: \n%s", client.PrintResponse(res))
     }
-    if strings.Contains(res, "status=0") {
-        t.Errorf("Unexpected success status code in output: %s", res)
+    if !client.HasError(res) {
+        t.Errorf("Unexpected success status code in output: \n%s", client.PrintResponse(res))
     }
 }
 
@@ -51,10 +50,10 @@ func TestStopServerWhenPowerOn(t *testing.T) {
         t.Errorf("Command execution error: %s", err)
     }
     if c.PowerOn != false {
-        t.Errorf("Server power is not off. \nReceived response: \n%s", res)
+        t.Errorf("Server power is not off. \nReceived response: \n%s", client.PrintResponse(res))
     }
-    if !strings.Contains(res, "status=0") {
-        t.Errorf("Unexpected non zero status code in output: %s", res)
+    if client.HasError(res) {
+        t.Errorf("Unexpected non zero status code in output: \n%s", client.PrintResponse(res))
     }
 }
 
@@ -67,10 +66,10 @@ func TestStopServerWhenPowerOff(t *testing.T) {
         t.Errorf("Command execution error: %s", err)
     }
     if c.PowerOn != false {
-        t.Errorf("Server power is not off. \nReceived response: \n%s", res)
+        t.Errorf("Server power is not off. \nReceived response: \n%s", client.PrintResponse(res))
     }
-    if strings.Contains(res, "status=0") {
-        t.Errorf("Unexpected success status code in output: %s", res)
+    if !client.HasError(res) {
+        t.Errorf("Unexpected success status code in output: \n%s", client.PrintResponse(res))
     }
 }
 
@@ -82,11 +81,11 @@ func TestResetServerHardWhenPowerOn(t *testing.T) {
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
-    if !strings.Contains(res, "status=0") {
-        t.Errorf("Unexpected non zero status code in output: %s", res)
+    if client.HasError(res) {
+        t.Errorf("Unexpected non zero status code in output: \n%s", client.PrintResponse(res))
     }
     if c.PowerOn == false {
-        t.Errorf("Server power is off. \nReceived response: \n%s", res)
+        t.Errorf("Server power is off. \nReceived response: \n%s", client.PrintResponse(res))
     }
 }
 
@@ -98,11 +97,11 @@ func TestResetServerHardWhenPowerOff(t *testing.T) {
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
-    if strings.Contains(res, "status=0") {
-        t.Errorf("Unexpected success status code in output: %s", res)
+    if !client.HasError(res) {
+        t.Errorf("Unexpected success status code in output: \n%s", client.PrintResponse(res))
     }
     if c.PowerOn != false {
-        t.Errorf("Server power is unexpectedly on. \nReceived response: \n%s", res)
+        t.Errorf("Server power is unexpectedly on. \nReceived response: \n%s", client.PrintResponse(res))
     }
 }
 
@@ -114,11 +113,11 @@ func TestResetServerSoftWhenPowerOn(t *testing.T) {
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
-    if !strings.Contains(res, "status=0") {
-        t.Errorf("Unexpected non zero status code in output: %s", res)
+    if client.HasError(res) {
+        t.Errorf("Unexpected non zero status code in output: \n%s", client.PrintResponse(res))
     }
     if c.PowerOn == false {
-        t.Errorf("Server power is off. \nReceived response: \n%s", res)
+        t.Errorf("Server power is off. \nReceived response: \n%s", client.PrintResponse(res))
     }
 }
 
@@ -130,10 +129,10 @@ func TestResetServerSoftWhenPowerOff(t *testing.T) {
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
-    if strings.Contains(res, "status=0") {
-        t.Errorf("Unexpected success status code in output: %s", res)
+    if !client.HasError(res) {
+        t.Errorf("Unexpected success status code in output: \n%s", client.PrintResponse(res))
     }
     if c.PowerOn != false {
-        t.Errorf("Server power is unexpectedly on. \nReceived response: \n%s", res)
+        t.Errorf("Server power is unexpectedly on. \nReceived response: \n%s", client.PrintResponse(res))
     }
 }

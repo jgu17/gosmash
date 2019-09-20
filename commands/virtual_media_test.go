@@ -1,7 +1,6 @@
 package commands
 
 import (
-    "strings"
     "testing"
     "gosmash/client"
     "gosmash/commands"
@@ -19,17 +18,17 @@ func TestInsertUSBImage(t *testing.T) {
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
-    if !strings.Contains(res, "status=0") {
-        t.Errorf("Unexpected non zero status code in output: %s", res)
+    if client.HasError(res) {
+        t.Errorf("Unexpected non zero status code in output: \n%s", client.PrintResponse(res))
     }
     if c.MediaConnected != true {
-        t.Errorf("Media is not connected. \nReceived response: \n%s", res)
+        t.Errorf("Media is not connected. \nReceived response: \n%s", client.PrintResponse(res))
     }
     if c.ImageURL != "http://xyz.com/foo.iso" {
-        t.Errorf("Media is not set to the correct image url. \nReceived response: \n%s", res)
+        t.Errorf("Media is not set to the correct image url. \nReceived response: \n%s", client.PrintResponse(res))
     }
     if (c.BootStateValue != client.BootAlwaysState) {
-        t.Errorf("oemhp_boot is not set to always as expected: %s", *c)
+        t.Errorf("oemhp_boot is not set to always as expected: \n%v", *c)
     }
 }
 
@@ -42,17 +41,17 @@ func TestInsertUSBImageSingleBoot(t *testing.T) {
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
-    if !strings.Contains(res, "status=0") {
-        t.Errorf("Unexpected non zero status code in output: %s", res)
+    if client.HasError(res) {
+        t.Errorf("Unexpected non zero status code in output: \n%s", client.PrintResponse(res))
     }
     if c.MediaConnected != true {
-        t.Errorf("Media is not connected. \nReceived response: \n%s", res)
+        t.Errorf("Media is not connected. \nReceived response: \n%s", client.PrintResponse(res))
     }
     if c.ImageURL != "http://xyz.com/foo.iso" {
-        t.Errorf("Media is not set to the correct image url. \nReceived response: \n%s", res)
+        t.Errorf("Media is not set to the correct image url. \nReceived response: \n%s", client.PrintResponse(res))
     }
     if (c.BootStateValue != client.BootOnceState) {
-        t.Errorf("oemhp_boot is not set to once as expected: %s", *c)
+        t.Errorf("oemhp_boot is not set to once as expected: \n%v", *c)
     }
 }
 
@@ -65,17 +64,17 @@ func TestInsertCDRomImage(t *testing.T) {
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
-    if !strings.Contains(res, "status=0") {
-        t.Errorf("Unexpected non zero status code in output: %s", res)
+    if client.HasError(res) {
+        t.Errorf("Unexpected non zero status code in output: \n%s", client.PrintResponse(res))
     }
     if c.MediaConnected != true {
-        t.Errorf("Media is not connected. \nReceived response: \n%s", res)
+        t.Errorf("Media is not connected. \nReceived response: \n%s", client.PrintResponse(res))
     }
     if c.ImageURL != "http://xyz.com/foo.iso" {
-        t.Errorf("Media is not set to the correct image url. \nReceived response: \n%s", res)
+        t.Errorf("Media is not set to the correct image url. \nReceived response: \n%s", client.PrintResponse(res))
     }
     if (c.BootStateValue != client.BootAlwaysState) {
-        t.Errorf("oemhp_boot is not set to always as expected: %s", *c)
+        t.Errorf("oemhp_boot is not set to always as expected: %v", *c)
     }
 }
 
@@ -88,56 +87,56 @@ func TestInsertCDRomImageSingleBoot(t *testing.T) {
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
-    if !strings.Contains(res, "status=0") {
-        t.Errorf("Unexpected non zero status code in output: %s", res)
+    if client.HasError(res) {
+        t.Errorf("Unexpected non zero status code in output: \n%s", client.PrintResponse(res))
     }
     if c.MediaConnected != true {
-        t.Errorf("Media is not connected. \nReceived response: \n%s", res)
+        t.Errorf("Media is not connected. \nReceived response: \n%s", client.PrintResponse(res))
     }
     if c.ImageURL != "http://xyz.com/foo.iso" {
-        t.Errorf("Media is not set to the correct image url. \nReceived response: \n%s", res)
+        t.Errorf("Media is not set to the correct image url. \nReceived response: \n%s", client.PrintResponse(res))
     }
     if (c.BootStateValue != client.BootOnceState) {
-        t.Errorf("oemhp_boot is not set to once as expected: %s", *c)
+        t.Errorf("oemhp_boot is not set to once as expected: \n%v", *c)
     }
 }
 
 func TestEjectCDRomImage(t *testing.T) {
     c := client.NewSimulator(ep)
     c.ImageURL = "http://xyz.com/foo.iso"
-    c.MediaConnected = false
+    c.MediaConnected = true
     vm := commands.VirtualMedia{c}
     res, err := vm.EjectCDRomImage()
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
-    if !strings.Contains(res, "status=0") {
-        t.Errorf("Unexpected non zero status code in output: %s", res)
+    if client.HasError(res) {
+        t.Errorf("Unexpected non zero status code in output: \n%s", client.PrintResponse(res))
     }
     if c.MediaConnected != false {
-        t.Errorf("Media is still connected: \n%s", *c)
+        t.Errorf("Media is still connected: \n%v", *c)
     }
     if c.ImageURL != "" {
-        t.Errorf("Media is not ejected: %s", *c)
+        t.Errorf("Media is not ejected: \n%v", *c)
     }
 }
 
 func TestEjectUSBImage(t *testing.T) {
     c := client.NewSimulator(ep)
     c.ImageURL = "http://xyz.com/foo.iso"
-    c.MediaConnected = false
+    c.MediaConnected = true
     vm := commands.VirtualMedia{c}
     res, err := vm.EjectUSBImage()
     if err != nil {
         t.Errorf("Command execution error: %s", err)
     }
-    if !strings.Contains(res, "status=0") {
-        t.Errorf("Unexpected non zero status code in output: %s", res)
+    if client.HasError(res) {
+        t.Errorf("Unexpected non zero status code in output: \n%s", client.PrintResponse(res))
     }
     if c.MediaConnected != false {
-        t.Errorf("Media is still connected: \n%s", *c)
+        t.Errorf("Media is still connected: \n%v", *c)
     }
     if c.ImageURL != "" {
-        t.Errorf("Media is not ejected: %s", *c)
+        t.Errorf("Media is not ejected: \n%v", *c)
     }
 }

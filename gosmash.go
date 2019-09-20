@@ -16,7 +16,6 @@ func main() {
     password := flag.String("p", "", "password")
     boot := flag.String("boot", "once", "boot options, either always or once")
     flag.Parse()
-    fmt.Println("password:", *password, "\nkey:", *key)    
 
     endpoint := client.NewEndpoint(host)
 
@@ -28,13 +27,13 @@ func main() {
     } else {
         panic("missing SSH key or password in the arguemnts")
     }
-    c, ce := client.NewClient(*endpoint, auth)
+    c := client.NewClient(*endpoint)
+    ce := c.Connect(auth)
     if ce != nil {
         panic(ce)
     }
 
     args := flag.Args()
-    fmt.Println(args)
 
     if len(args) == 0 {
         fmt.Println("Missing command name")
@@ -42,7 +41,7 @@ func main() {
     }
 
     var (
-        res string
+        res [] client.Response
         err error
     )
 
@@ -68,7 +67,7 @@ func main() {
             fmt.Println("Usage: -b=[once|always] insert_usb ISO_url")
             return
         }
-        url := args[2]
+        url := args[1]
         if *boot == "once" {
             res, err = media.InsertUSBImageSingleBoot(url)
         } else {
@@ -91,6 +90,6 @@ func main() {
     if err != nil {
         fmt.Println("Command execution error: " + err.Error())
     }
-    fmt.Println("Command completed:\n", res)
+    fmt.Println("Command completed:\n", client.PrintResponse(res))
 }
 

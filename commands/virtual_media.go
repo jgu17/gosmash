@@ -35,7 +35,7 @@ var SetOEMHPBootCmd = client.Request{
     Args: []string{"oemhp_boot="},
 }
 
-func (v *VirtualMedia) InsertUSBImage(url string) (string, error) {
+func (v *VirtualMedia) InsertUSBImage(url string) ([]client.Response, error) {
    cmds := []client.Request {
              SetUSBTargetCmd,
              client.Request {
@@ -48,7 +48,7 @@ func (v *VirtualMedia) InsertUSBImage(url string) (string, error) {
 }
 
 
-func (v *VirtualMedia) InsertUSBImageSingleBoot(url string) (string, error) {
+func (v *VirtualMedia) InsertUSBImageSingleBoot(url string) ([]client.Response, error) {
    cmds := []client.Request {
              SetUSBTargetCmd,
              client.Request{
@@ -64,7 +64,7 @@ func (v *VirtualMedia) InsertUSBImageSingleBoot(url string) (string, error) {
    return v.Client.Commands(cmds)
 }
 
-func (v *VirtualMedia) EjectUSBImage() (string, error) {
+func (v *VirtualMedia) EjectUSBImage() ([]client.Response, error) {
    cmds := []client.Request {
              SetUSBTargetCmd,
              SetOEMHPDisconnectCmd,
@@ -72,7 +72,7 @@ func (v *VirtualMedia) EjectUSBImage() (string, error) {
    return v.Client.Commands(cmds)
 }
 
-func (v *VirtualMedia) InsertCDRomImage(url string) (string, error) {
+func (v *VirtualMedia) InsertCDRomImage(url string) ([]client.Response, error) {
    cmds := []client.Request {
              SetCDROMTargetCmd,
              client.Request{
@@ -85,7 +85,7 @@ func (v *VirtualMedia) InsertCDRomImage(url string) (string, error) {
 }
 
 
-func (v *VirtualMedia) InsertCDRomImageSingleBoot(url string) (string, error) {
+func (v *VirtualMedia) InsertCDRomImageSingleBoot(url string) ([]client.Response, error) {
    cmds := []client.Request {
              SetCDROMTargetCmd,
              client.Request{
@@ -101,7 +101,7 @@ func (v *VirtualMedia) InsertCDRomImageSingleBoot(url string) (string, error) {
    return v.Client.Commands(cmds)
 }
 
-func (v *VirtualMedia) EjectCDRomImage() (string, error) {
+func (v *VirtualMedia) EjectCDRomImage() ([]client.Response, error) {
    cmds := []client.Request {
              SetCDROMTargetCmd,
              SetOEMHPDisconnectCmd,
