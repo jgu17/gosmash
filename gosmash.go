@@ -21,9 +21,9 @@ func main() {
 
     var auth ssh.AuthMethod
     if *password != "" {
-        auth = client.PasswordAuth(password)
+        auth = client.PasswordAuth(*password)
     } else if *key != "" {
-        auth = client.KeyAuth(key)
+        auth = client.KeyAuth(*key)
     } else {
         panic("missing SSH key or password in the arguemnts")
     }

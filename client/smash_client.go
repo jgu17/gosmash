@@ -18,8 +18,8 @@ func NewClient(e endpoint) *smashClient {
 	return &smashClient{Endpoint: e}
 }
 
-func KeyAuth(keyFile *string) ssh.AuthMethod {
-	key, err := ioutil.ReadFile(*keyFile)
+func KeyAuth(keyFile string) ssh.AuthMethod {
+	key, err := ioutil.ReadFile(keyFile)
 	if err != nil {
 		panic(err)
 	}
@@ -31,8 +31,8 @@ func KeyAuth(keyFile *string) ssh.AuthMethod {
 	return ssh.PublicKeys(signer)
 }
 
-func PasswordAuth(pass *string) ssh.AuthMethod {
-	return ssh.Password(*pass)
+func PasswordAuth(pass string) ssh.AuthMethod {
+	return ssh.Password(pass)
 }
 
 func (c *smashClient) Connect(auth ssh.AuthMethod) error {
