@@ -3,9 +3,9 @@ package main
 import (
     "flag"
     "fmt"
+    "github.com/jgu17/gosmash/client"
+    "github.com/jgu17/gosmash/commands"
     "golang.org/x/crypto/ssh"
-    "gosmash/client"
-    "gosmash/commands"
 )
 
 //An example CLI program demonstrating the usage of GoSMASH client.
@@ -17,7 +17,7 @@ func main() {
     boot := flag.String("boot", "once", "boot options, either always or once")
     flag.Parse()
 
-    endpoint := client.NewEndpoint(host)
+    endpoint := client.NewEndpoint(*host)
 
     var auth ssh.AuthMethod
     if *password != "" {
